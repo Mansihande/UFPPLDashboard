@@ -31,7 +31,7 @@ mongoose.connect(process.env.DATABASE_URI, {
   app.use('/uploads', serveStatic(path.join(__dirname, '../images')));
   app.use(cors({
     origin:"*",
-    credentials:true,
+    credentials:true, 
   }))
   
   app.use('/product',productRoute );
