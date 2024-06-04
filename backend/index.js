@@ -23,7 +23,7 @@ mongoose.connect(process.env.DATABASE_URI, {
 }).catch(err => {
     console.error('Failed to connect to MongoDB', err);
 });
-  const port = process.env.PORT || 3006;
+  const port = process.env.PORT || 3009;
   app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
   });
