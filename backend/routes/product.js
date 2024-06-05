@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {insertService,getService,updateService,deleteService,getServiceById} = require('../controller/services') 
 const {uploadPhoto} = require('../middleware/fileUpload')
-const {insertCategory,updateCategory,updateSubCategory,updatesubsubcategory,deletecategory,deletesubcategory,deletesubsubcategory}= require('../controller/category')
+const {insertCategory,updateCategory,updateSubCategory,updatesubsubcategory,deletecategory,deletesubcategory,deletesubsubcategory,getAll,getSpecificCategory,getSpecificSubcategory}= require('../controller/category')
 
 
 router.post('/insertService',uploadPhoto,insertService);
@@ -18,5 +18,7 @@ router.put('/updatesubsubcategory',updatesubsubcategory)
 router.delete('/deletecategory',deletecategory)
 router.delete('/deletesubcategory',deletesubcategory)
 router.delete('/deletesubsubcategory',deletesubsubcategory)
-
+router.get('/getAll',getAll)
+router.get('/getSpecificCategory',getSpecificCategory)
+router.get('/getSpecificSubcategory',getSpecificSubcategory)
 module.exports = router;
