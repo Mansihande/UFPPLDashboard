@@ -1,13 +1,31 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dotted-line {
+  position: relative;
+  padding-left: 20px; /* Adjust this padding to match the indentation level */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.dotted-line::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 10px; /* Adjust this width for the line length */
+  border-top: 1px dashed #ccc; /* Adjust the color and style */
+  transform: translateY(-50%);
+}
+
+.indent-1 {
+  padding-left: 1rem;
+}
+
+.indent-2 {
+  padding-left: 2rem;
+}
+
+.indent-3 {
+  padding-left: 3rem;
 }

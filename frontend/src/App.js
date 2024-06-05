@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import ExampleWithProviders from "./components/pages/EditTable";
+import CategoryTable from "./components/pages/CategoryTable";
+import {
+  createBrowserRouter,
+  createRoutesFromChildren,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
+import Sidebar from "./components/Sidebar";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const router = createBrowserRouter(
+    createRoutesFromChildren(
+    <>
+    <Route path="/" element={<Sidebar />} >
+    <Route path="/dashboard" element={<ExampleWithProviders />}/>
+    <Route path="/products/categories" element={<CategoryTable />}/>
+    </Route>
+    </>
+  
+  )
   );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
