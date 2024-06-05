@@ -1,42 +1,53 @@
 const Category = require("../model/category");
 
 const insertCategory = async (req, res) => {
-    try {
-      const { title, category, icons, subCategory } = req.body;
-      let existingCategory = await Category.findOne({ category });
-  
-      if (existingCategory) {
-        const subCategories = existingCategory.subCategory.map(subCategory => subCategory.title);
-        const newSubCategories = subCategory.filter(subCategory => !subCategories.includes(subCategory.title));
-  
-        if (newSubCategories.length > 0) {
-          existingCategory.subCategory.push(...newSubCategories.map(subCategory => ({ title: subCategory.title, icons: subCategory.icons })));
-        }
-  
-        const subSubCategoriesInExisting = existingCategory.subCategory.flatMap(subCategory => subCategory.subCategory);
-        const newSubSubCategories = subCategory.flatMap(subCategory => subCategory.subCategory.filter(subSubCategory => !subSubCategoriesInExisting.includes(subSubCategory.title)));
-  
-        if (newSubSubCategories.length > 0) {
-          existingCategory.subCategory.forEach(subCategory => {
-            subCategory.subCategory.push(...newSubSubCategories.map(subSubCategory => ({ title: subSubCategory.title, icons: subSubCategory.icons })));
-          });
+  const { category, icons, subCategories } = req.body;
+
+  try {
+    // Check if the main category already exists
+    let existingCategory = await Category.findOne({ category });
+
+    if (existingCategory) {
+      if (subCategories.length > 0) {
+        for (let i = 0; i < subCategories.length; i++) {
+          let subCategory = subCategories[i];
+          let existingSubCategory = existingCategory.subCategories.find((subCat) => subCat.category === subCategory.category);
+          if (existingSubCategory) {
+            if (subCategory.subSubCategory.length > 0) {
+              for (let j = 0; j < subCategory.subSubCategory.length; j++) {
+                let subSubCategory = subCategory.subSubCategory[j];
+                let existingSubSubCategory = existingSubCategory.subSubCategory.find((subSubCat) => subSubCat.category === subSubCategory.category);
+                if (!existingSubSubCategory) {
+                  existingSubCategory.subSubCategory.push(subSubCategory);
+                }
+              }
+            }
+          } else {
+            existingCategory.subCategories.push(subCategory);
+          }
         }
         await existingCategory.save();
         res.status(201).json(existingCategory);
       } else {
         res.status(400).json({ message: "Subcategories are required" });
       }
-      res.status(200).json(updatedCategory);
+    } else {
+      // Create a new category
+      const newCategory = new Category({
+        category,
+        icons,
+        subCategories,
+      });
 
-    
-      const newCategory = new Category({ title, category, icons, subCategory });
+      // Save the new category
       const savedCategory = await newCategory.save();
-  
+
       res.status(201).json(savedCategory);
-    } catch (error) {
-      res.status(500).json({ message: 'Server error', error });
     }
-}
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 
 const updateCategory = async (req, res) => {
   // Update main category
