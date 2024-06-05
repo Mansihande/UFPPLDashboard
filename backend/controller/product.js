@@ -20,3 +20,5 @@ const insertProduct = async(req,res)=>{
     res.status(500).json({ message: 'Error inserting product' });
   }
 }
+
+module.exports = {insertProduct} 
