@@ -1,9 +1,9 @@
 const Product = require("../model/product")
-
+const Category = require("../model/category")
 const insertProduct = async(req,res)=>{
 
   try {
-    const { title, details, brand, price, categories, subcategories, subSubcategories } = req.body;
+    const { title, details, brand, width ,thickness, categories, subcategories, subSubcategories } = req.body;
     const photo = req.files.map(file => file.filename); // Extract the filenames from the array of files
 
     console.log(subcategories)
@@ -12,7 +12,8 @@ const insertProduct = async(req,res)=>{
       details,
       brand,
       photo,
-      price,
+      width,
+      thickness,
       categories,
       subcategories,
       subSubcategories
@@ -64,7 +65,25 @@ const deleteProduct = async (req, res) => {
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    res.status(200).json(products);
+
+    // Map over each product to find and append the category name
+    const productsWithCategoryName = await Promise.all(products.map(async (product) => {
+      // Find the category based on the product's categoryId
+      console.log(product.categories)
+      const category = await Category.findOne({ '_id': product.categories });
+      
+      // Extract the category name
+      const categoryName = category ? category.category : 'Uncategorized';
+
+      // Append the category name to the product object
+      return {
+        ...product.toJSON(),
+        categoryName
+      };
+    }));
+
+    // Send the products with category names in the response
+    res.status(200).json(productsWithCategoryName);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }

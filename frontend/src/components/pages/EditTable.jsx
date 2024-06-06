@@ -35,14 +35,14 @@ const Example = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'id',
-        header: 'Id',
+        accessorKey: 'title',
+        header: 'Title',
         enableEditing: true,
         size: 80,
       },
       {
-        accessorKey: 'firstName',
-        header: 'First Name',
+        accessorKey: 'details',
+        header: 'Details',
         muiEditTextFieldProps: {
           required: true,
           error: !!validationErrors?.firstName,
@@ -55,8 +55,8 @@ const Example = () => {
         },
       },
       {
-        accessorKey: 'lastName',
-        header: 'Last Name',
+        accessorKey: 'brand',
+        header: 'Brand',
         muiEditTextFieldProps: {
           required: true,
           error: !!validationErrors?.lastName,
@@ -69,10 +69,10 @@ const Example = () => {
         },
       },
       {
-        accessorKey: 'email',
-        header: 'Email',
+        accessorKey: 'price',
+        header: 'Price',
         muiEditTextFieldProps: {
-          type: 'email',
+          type: 'number',
           required: true,
           error: !!validationErrors?.email,
           helperText: validationErrors?.email,
@@ -84,8 +84,8 @@ const Example = () => {
         }, 
       },
       {
-        accessorKey: 'state',
-        header: 'State',
+        accessorKey: 'status',
+        header: 'Status',
         editVariant: 'select',
         editSelectOptions: usStates,
         muiEditTextFieldProps: {

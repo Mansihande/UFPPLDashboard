@@ -1,5 +1,10 @@
 import ExampleWithProviders from "./components/pages/EditTable";
 import CategoryTable from "./components/pages/CategoryTable";
+import InsertCategory from "./components/pages/InsertCategory";
+import EditCategory from "./components/pages/EditCategory"
+import ProductTable from "./components/pages/ProductTable"
+import InsertProduct from "./components/pages/InsertProduct"
+import EditProduct from "./components/pages/EditProduct"
 import {
   createBrowserRouter,
   createRoutesFromChildren,
@@ -15,6 +20,12 @@ function App() {
     <Route path="/" element={<Sidebar />} >
     <Route path="/dashboard" element={<ExampleWithProviders />}/>
     <Route path="/products/categories" element={<CategoryTable />}/>
+    <Route path="/editCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditCategory/>} />
+    <Route path="/products/categories/addCategory" element={<InsertCategory />}/>
+    <Route path="/products/products" element={<ProductTable/>}/>
+    <Route path="/products/addProduct"  element={<InsertProduct/>}/>
+    <Route path="/editProduct/:productId"  element={<EditProduct/>}/>
+
     </Route>
     </>
   

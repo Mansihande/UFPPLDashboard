@@ -6,7 +6,8 @@ const productSchema = new mongoose.Schema({
   details: { type: String, required: true },
   photo:[{ type: String ,required: true}],
   brand: { type: String, required: true },
-  price: { type: Number, required: true },
+  width: { type: String, required: true },
+  thickness: { type: String, required: true },
   status: { type: Boolean, default: false },
   categories: [{ type: String, ref: 'Category' }],
   subcategories: [{ type: String, ref: 'Category' }],
@@ -22,4 +23,4 @@ productSchema.pre('save', function(next) {
   });
 const Product = mongoose.model('Product', productSchema);
 
-module.exports = Product;
+module.exports = Product; 
