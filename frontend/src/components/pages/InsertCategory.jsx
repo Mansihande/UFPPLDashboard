@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { IconContext } from 'react-icons';
-import * as ReactIcons from 'react-icons';
+import React, { useState } from "react";
+import { IconContext } from "react-icons";
+import * as ReactIcons from "react-icons";
 
 const InsertCategory = () => {
   const [formData, setFormData] = useState({
-    category: '',
-    icons: '',
-    subCategories: []
+    category: "",
+    icons: "",
+    subCategories: [],
   });
 
   const [categoryList, setCategoryList] = useState([]);
   const [currentCategory, setCurrentCategory] = useState({
-    category: '',
-    icons: ''
+    category: "",
+    icons: "",
   });
 
   const [showIconOptions, setShowIconOptions] = useState(false);
@@ -41,14 +41,14 @@ const InsertCategory = () => {
       updatedFormData.subCategories.push(newCategory);
       setFormData(updatedFormData);
 
-      const updatedCategoryList = categoryList.map(category =>
+      const updatedCategoryList = categoryList.map((category) =>
         category.category === formData.category ? updatedFormData : category
       );
       setCategoryList(updatedCategoryList);
     }
 
     // Reset currentCategory form
-    setCurrentCategory({ category: '', icons: '' });
+    setCurrentCategory({ category: "", icons: "" });
   };
 
   const handleIconFocus = () => {
@@ -67,7 +67,7 @@ const InsertCategory = () => {
 
   const handleIconFilter = (e) => {
     const searchValue = e.target.value.toLowerCase();
-    const filtered = Object.keys(ReactIcons).filter(iconName =>
+    const filtered = Object.keys(ReactIcons).filter((iconName) =>
       iconName.toLowerCase().includes(searchValue)
     );
     setFilteredIcons(filtered);
@@ -79,7 +79,10 @@ const InsertCategory = () => {
         <h1 className="text-2xl font-bold mb-4">Add Categories</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="form-group">
-            <label htmlFor="existing-category" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="existing-category"
+              className="block text-sm font-medium text-gray-700"
+            >
               Existing Categories
             </label>
             <select
@@ -97,7 +100,10 @@ const InsertCategory = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="category"
+              className="block text-sm font-medium text-gray-700"
+            >
               Category
             </label>
             <input
@@ -112,7 +118,10 @@ const InsertCategory = () => {
           </div>
 
           <div className="form-group relative">
-            <label htmlFor="icons" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="icons"
+              className="block text-sm font-medium text-gray-700"
+            >
               Icon
             </label>
             <input
@@ -135,28 +144,35 @@ const InsertCategory = () => {
                   className="block w-full px-3 py-2 border-b border-gray-300 focus:outline-none"
                 />
                 <div className="px-3 py-2">
-                {filteredIcons.length === 0 ? Object.keys(ReactIcons).map((iconName, index) => {
-  const Icon = ReactIcons[iconName];
-  console.log('Icon:', Icon); // Log the Icon
-  return (
-    <div key={index} onClick={() => handleIconSelect(iconName)} className="flex items-center cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">
-      <Icon size={24} className="mr-2" />
-      <span>{iconName}</span>
-    </div>
-  );
-}) : (
-  filteredIcons.map((iconName, index) => {
-    const Icon = ReactIcons[iconName];
-    console.log('Icon:', Icon); // Log the Icon
-    return (
-      <div key={index} onClick={() => handleIconSelect(iconName)} className="flex items-center cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md">
-        <Icon size={24} className="mr-2" />
-        <span>{iconName}</span>
-      </div>
-    );
-  })
-)}
-
+                  {filteredIcons.length === 0
+                    ? Object.keys(ReactIcons).map((iconName, index) => {
+                        const Icon = ReactIcons[iconName];
+                        console.log("Icon:", Icon); // Log the Icon
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => handleIconSelect(iconName)}
+                            className="flex items-center cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md"
+                          >
+                            <Icon size={24} className="mr-2" />
+                            <span>{iconName}</span>
+                          </div>
+                        );
+                      })
+                    : filteredIcons.map((iconName, index) => {
+                        const Icon = ReactIcons[iconName];
+                        console.log("Icon:", Icon); // Log the Icon
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => handleIconSelect(iconName)}
+                            className="flex items-center cursor-pointer hover:bg-gray-100 px-2 py-1 rounded-md"
+                          >
+                            <Icon size={24} className="mr-2" />
+                            <span>{iconName}</span>
+                          </div>
+                        );
+                      })}
                 </div>
               </div>
             )}
