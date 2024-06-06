@@ -1,51 +1,75 @@
 const Category = require("../model/category");
 
 const insertCategory = async (req, res) => {
-  const { category, icons, subCategories } = req.body;
+  const { category, icons } = req.body;
 
   try {
-    // Check if the main category already exists
-    let existingCategory = await Category.findOne({ category });
+    const existingCategory = await Category.findOne({ category });
 
     if (existingCategory) {
-      if (subCategories.length > 0) {
-        for (let i = 0; i < subCategories.length; i++) {
-          let subCategory = subCategories[i];
-          let existingSubCategory = existingCategory.subCategories.find((subCat) => subCat.category === subCategory.category);
-          if (existingSubCategory) {
-            if (subCategory.subSubCategory.length > 0) {
-              for (let j = 0; j < subCategory.subSubCategory.length; j++) {
-                let subSubCategory = subCategory.subSubCategory[j];
-                let existingSubSubCategory = existingSubCategory.subSubCategory.find((subSubCat) => subSubCat.category === subSubCategory.category);
-                if (!existingSubSubCategory) {
-                  existingSubCategory.subSubCategory.push(subSubCategory);
-                }
-              }
-            }
-          } else {
-            existingCategory.subCategories.push(subCategory);
-          }
-        }
-        await existingCategory.save();
-        res.status(201).json(existingCategory);
-      } else {
-        res.status(400).json({ message: "Subcategories are required" });
-      }
-    } else {
-      // Create a new category
-      const newCategory = new Category({
-        category,
-        icons,
-        subCategories,
-      });
-
-      // Save the new category
-      const savedCategory = await newCategory.save();
-
-      res.status(201).json(savedCategory);
+      return res.status(400).json({ message: 'Category already exists' });
     }
+
+    const newCategory = new Category({ category, icons });
+    const savedCategory = await newCategory.save();
+
+    res.status(201).json(savedCategory);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+const insertSubCategory = async (req, res) => {
+  const { categoryId } = req.query;
+  const { category, icons } = req.body;
+
+  try {
+    const categoryDoc = await Category.findById(categoryId);
+    if (!categoryDoc) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    const existingSubCategory = categoryDoc.subCategories.find((subCat) => subCat.category === category);
+    if (existingSubCategory) {
+      return res.status(400).json({ message: 'Subcategory already exists' });
+    }
+
+    categoryDoc.subCategories.push({ category, icons });
+    await categoryDoc.save();
+
+    res.status(201).json(categoryDoc);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+const insertSubSubCategory = async (req, res) => {
+  const { categoryId, subCategoryId } = req.query;
+  const { category, icons } = req.body;
+
+  try {
+    const categoryDoc = await Category.findById(categoryId);
+   
+    if (!categoryDoc) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    const subCategory = categoryDoc.subCategories.id(subCategoryId);
+    if (!subCategory) {
+      return res.status(404).json({ message: 'Subcategory not found' });
+    }
+
+    const existingSubSubCategory = subCategory.subSubCategory.find((subSubCat) => subSubCat.category === category);
+    if (existingSubSubCategory) {
+      return res.status(400).json({ message: 'Sub-subcategory already exists' });
+    }
+
+    subCategory.subSubCategory.push({ category, icons });
+    await categoryDoc.save();
+
+    res.status(201).json(categoryDoc);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
   }
 };
 
@@ -272,7 +296,7 @@ const getSpecificCategory = async(req,res)=>{
 }
 
 const getSpecificSubcategory = async(req,res)=>{
-  const { categoryId, subCategoryId } = req.params;
+  const { categoryId, subCategoryId } = req.query;
   try {
     const category = await Category.findById(categoryId);
     if (!category) {
@@ -288,5 +312,30 @@ const getSpecificSubcategory = async(req,res)=>{
   }
 }
 
+const getSpecificSubSubcategory = async (req, res) => {
+  const { categoryId, subCategoryId, subSubCategoryId } = req.query;
 
-module.exports = { insertCategory,updateCategory,updateSubCategory,updatesubsubcategory,deletecategory,deletesubcategory,deletesubsubcategory,getAll,getSpecificCategory,getSpecificSubcategory };
+  try {
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      return res.status(404).json({ message: 'Category not found' });
+    }
+
+    const subCategory = category.subCategories.id(subCategoryId);
+    if (!subCategory) {
+      return res.status(404).json({ message: 'Subcategory not found' });
+    }
+
+    const subSubCategory = subCategory.subSubCategory.id(subSubCategoryId);
+    if (!subSubCategory) {
+      return res.status(404).json({ message: 'Sub-subcategory not found' });
+    }
+
+    res.status(200).json(subSubCategory);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+
+module.exports = { insertCategory,insertSubCategory,insertSubSubCategory,updateCategory,updateSubCategory,updatesubsubcategory,deletecategory,deletesubcategory,deletesubsubcategory,getAll,getSpecificCategory,getSpecificSubcategory,getSpecificSubSubcategory };
