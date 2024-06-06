@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { IconContext } from "react-icons";
 import * as ReactIcons from "react-icons";
 
@@ -27,7 +28,7 @@ const InsertCategory = () => {
     setFormData(JSON.parse(e.target.value));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newCategory = { ...currentCategory, subCategories: [] };
 
@@ -49,6 +50,36 @@ const InsertCategory = () => {
 
     // Reset currentCategory form
     setCurrentCategory({ category: "", icons: "" });
+
+    // Log the formData to see what we are sending
+    console.log("FormData:", formData);
+
+    // Prepare the data to be sent to the backend
+    const payload = {
+      title: "Sample Title",
+      details: "Sample Details",
+      brand: "Sample Brand",
+      price: 100, // Replace with actual price
+      categories: formData.category,
+      subcategories: formData.subCategories.map(sub => sub.category),
+      subSubcategories: [] // You can add logic to handle subSubcategories if needed
+    };
+
+    // Log the payload to check its structure
+    console.log("Payload:", payload);
+
+    try {
+      const response = await axios.post("http://localhost:3009/product/insertCategory", payload);
+      console.log("API Response:", response.data);
+
+      if (response.status === 201) {
+        alert("Product inserted successfully");
+      } else {
+        alert("Error inserting product");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   const handleIconFocus = () => {
@@ -147,7 +178,6 @@ const InsertCategory = () => {
                   {filteredIcons.length === 0
                     ? Object.keys(ReactIcons).map((iconName, index) => {
                         const Icon = ReactIcons[iconName];
-                        console.log("Icon:", Icon); // Log the Icon
                         return (
                           <div
                             key={index}
@@ -161,7 +191,6 @@ const InsertCategory = () => {
                       })
                     : filteredIcons.map((iconName, index) => {
                         const Icon = ReactIcons[iconName];
-                        console.log("Icon:", Icon); // Log the Icon
                         return (
                           <div
                             key={index}
